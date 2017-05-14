@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  		<title>Resource Reservation</title>
+  		<meta name="description" content="Resource Reservation System">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+		<script>
+			function validateForm() {  
+			    
+			    var name=document.getElementById("resourceName").value;
+			    if (name.trim().length == 0) {
+			        alert("Please enter a valid Resource Name!");
+			        return false;
+			    }
+			    
+			    var startTime = document.getElementById("availableStartTime").value;
+			    startTimeArray = startTime.split(":");
+			    
+			   	var endTime = document.getElementById("availableEndTime").value;
+			   	endTimeArray = endTime.split(":");
+			 
+			 	if(endTimeArray[0] < startTimeArray[0]){
+			 		 alert("Please enter a valid Start and End Time!");
+			         return false;
+			 	}
+			 
+				else if(endTimeArray[0] == startTimeArray[0]){
+			 		if(endTimeArray[1] <= startTimeArray[1]){
+			 			alert("Please enter a valid Start and End Time!");
+			 	        return false;
+			    	}
+			 	}
+			 	
+			 	return true;   
+			}
+			function adjust_textarea(h) {
+			    h.style.height = "50px";
+			    h.style.height = (h.scrollHeight)+"px";
+			}
+		</script>
+		<style>
+		p     { display: table-row;  }
+		label { display: table-cell; }
+		span { display: table-cell; }
+		</style>
+	</head>
+	<body>
+	<nav class="clearfix">
+		<ul class="clearfix">
+			<li style="width:{{width}}%"><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#YourReservations">Your Reservations</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#AllResources"><i class="material-icons">description</i> All Resources</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#YourResources">Your Resources</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/createResource"><i class="material-icons">add</i> Add Resource</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#SearchResource"><i class="material-icons">search</i> Search</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>		
+	<br>
+		<div class="displayDiv" style="margin-left:10%;">
+			<h4>Edit Resource: <a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a></h4><br>
+		<form class="centerAlignForm" action="/editResource" onsubmit="return validateForm()" method="post" enctype="multipart/form-data">
+			<p>
+				<label>Resource Name*: </label>
+				<span><input type="text" id="resourceName" required name="resourceName" value="{{resource.resourceName}}"></span>
+			<br><br></p>
+			<p>
+				<label>Available Start Time*:</label>
+				<span><input type="text" id="availableStartTime" name="availableStartTime" required pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}"
+			title="24-hour format" value="{{resource.availableStartTime}}"></span>
+			<br><br></p>
+			<p>
+				<label>Available End Time*:</label>
+				<span><input type="text" id="availableEndTime" name="availableEndTime" required pattern="([01]?[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}"
+			title="24-hour format" value="{{resource.availableEndTime}}"></span>
+			<br><br></p>
+			<p>
+				<label>Tags (comma separated):&nbsp;&nbsp;</label>
+				<span><input type="text" name="tags" value="{{tags}}"></span>
+			<br><br></p>
+			<p>
+				<label>Capacity:</label>
+				<span><input type="number" id="capacity" name="capacity" min=1 required value="{{resource.capacity}}"></span> 
+			<br><br></p>
+			<p>
+			 <label>Image:</label>
+	        <span><input type="file" id="img" name="img" value="{{img}}" accept="image/*"/></span>
+			<br><br></p>
+			<p>
+				<label>Description:</label>
+				<span><textarea id="description" maxlength="50" name="description" onkeyup="adjust_textarea(this)">{% if resource.description %}{{resource.description}}{% endif %}</textarea></span> 
+			<br><br></p>
+			<input type="hidden" name="resourceID" value="{{resource.id}}">
+			<input style="margin-left:25%" type="submit" value="Submit"><br><br>
+			</form>
+		</div>		
+	
+	</body>
+</html>
+{% endautoescape %}

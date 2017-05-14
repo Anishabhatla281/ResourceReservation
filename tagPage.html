@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  		<title>Resource Reservation</title>
+  		<meta name="description" content="Resource Reservation System">	
+  		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+			
+	</head>
+	<body>
+		<nav class="clearfix">
+		<ul class="clearfix">
+			<li><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			<li><a class="nounderline" href="/#YourReservations">Your Reservations</a></li>
+			<li><a class="nounderline" href="/#AllResources"><i class="material-icons">description</i> All Resources</a></li>
+			<li><a class="nounderline" href="/#YourResources">Your Resources</a></li>
+			<li><a class="nounderline" href="/createResource"><i class="material-icons">add</i> Add Resource</a></li>
+			<li><a class="nounderline" href="/#SearchResource"><i class="material-icons">search</i> Search</a></li>
+			<li><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>
+		
+		
+	<br><br>
+	
+	<div>
+		<h3>Resources for Tag: {{tag}}</h3>
+		{% if resources %}
+				<table>
+				<thead>
+					<tr>
+						<th>Resource Name</th>
+						<th>Available Start Time</th>
+						<th>Available End Time</th>
+						<th>Tags</th>
+						<th>Capacity</th>
+						<th>Number Of Times Reserved</th>
+					</tr>				
+				</thead>
+				<tbody>				
+					{% for resource in resources %}
+			<tr>
+						<td><a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a><sup><a href="/rssPage?value={{resource.id}}">RSS</a></sup></td>
+						<td>{{resource.availableStartTime}}</td>
+						<td>{{resource.availableEndTime}}</td>
+						<td>
+						{% for tag in resource.tags %}
+						<a href="/tagPage?value={{tag}}">{{tag}}</a>	
+						{% endfor %}
+						</td>
+						<td>
+					 	{{resource.capacity}}
+						</td>
+						<td>{{resource.numberOfTimesReserved}}</td>
+					</tr>
+					{% endfor %}			
+				</tbody>				
+			</table>
+			{% else %}
+				<h4 style="color:red"><br>Sorry! There is no such resource in the system currently.</h4>			
+			{% endif %}
+		</div><br><br>
+	</body>
+</html>
+{% endautoescape %}

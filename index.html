@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  		<title>Resource Reservation</title>
+  		<meta name="description" content="Resource Reservation System">
+  		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script>
+		function validateForm() {  		    
+		    var name=document.getElementById("search").value;
+		    if (name.trim().length == 0) {
+		        alert("Please enter a resource name!");
+		        return false;
+		    }
+			return true;
+		}
+	    </script>
+	    <style>
+	    #success{
+			 animation: fadeOutAnimation 6s;
+			 animation-fill-mode: forwards;
+		}
+		
+		@keyframes fadeOutAnimation {
+		  0% {
+		    opacity: 1;
+		  }
+		  100% {
+		   opacity:0;
+		  }
+		}
+		</style>
+	</head>
+	<body>
+		<nav class="clearfix">
+		<ul class="clearfix">
+			<li style="width:{{width}}%"><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			{% if displayAllSections %}
+			<li style="width:{{width}}%"><a class="nounderline" href="#YourReservations">Your Reservations</a></li>
+			{% else %}
+			<li style="width:{{width}}%"><a class="nounderline" href="#YourReservations">User Reservations</a></li>
+			{% endif %}
+			{% if displayAllSections %}
+			<li style="width:{{width}}%"><a class="nounderline" href="#AllResources"><i class="material-icons">description</i> All Resources</a></li>
+			{% endif %}
+			{% if displayAllSections %}
+			<li style="width:{{width}}%"><a class="nounderline" href="#YourResources">Your Resources</a></li>
+			{% else %}
+			<li style="width:{{width}}%"><a class="nounderline" href="#YourResources">User Resources</a></li>
+			{% endif %}
+			{% if displayAllSections %}
+			<li style="width:{{width}}%"><a class="nounderline" href="/createResource"><i class="material-icons">add</i> Add Resource</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="#SearchResource"><i class="material-icons">search</i> Search</a></li>
+			{% endif %}
+			<li style="width:{{width}}%"><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>		
+	<br>
+	{% if message %}
+	<div id="success" class="isa_success">
+    	<i class="fa fa-check"></i>
+   	 	{{message}}
+	</div><br>
+	{% endif %}
+	
+{% if displayAllSections %}
+<br>
+ <div class="displayDiv" id ="SearchResource" style="margin-left:10%;">
+ <h2>Search Options</h2><br>
+	<div>
+		<h4 class="searchTitle">Search By Name:
+			<form class = "searchForm" action="/searchName" onsubmit="return validateForm()">	
+			  <div class="container-2">
+			      <span class="icon"><i class="fa fa-search"></i></span>
+			      <input type="search" id="search" name="resourceName" placeholder="Enter a resource name.." />   
+			  </div>
+			</form>
+		</h4>
+	</div>
+	<br><br>
+	<h4 class="searchTitle"><a href="/searchByAvailability">Search By Availability</a></h4>
+	</div><br>
+	{% endif %}
+	
+	
+	<div id="YourReservations">
+	{% if displayAllSections %}
+	<h3>Your Reservations</h3>
+	{% else %}
+	<h3>Reservations Of {{user}}</h3>
+	{% endif %}
+	{% if userReservations %}
+	<table >
+		<thead>
+			<tr>
+				<th>USER</th>
+				<th>Resource Name</th>
+				<th>Reservation Date</th>
+				<th>Reservation Time</th>
+				<th>Duration (Hours:Minutes)</th>
+				{% if displayAllSections %}			
+				<th>Delete Reservation</th>
+				{% endif %}
+			</tr>				
+		</thead>
+		<tbody>				
+			{% for reservation in userReservations %}
+			<tr>
+				<td><a href="/userPage?value={{reservation.ownerID}}">{{reservation.ownerEmail}}</a></td>
+				<td><a href="/resourcePage?value={{reservation.resourceID}}">{{reservation.resourceName}}</a><sup><a href="/rssPage?value={{reservation.resourceID}}">RSS</a></sup></td>
+				<td>{{reservation.date}}</td>
+				<td> {{reservation.startTime}}</td>
+				<td>{{reservation.duration}}</td>
+				{% if displayAllSections %}
+				<td><a href="/deleteReservation?value={{reservation.reservationID}}" class="nounderline"><i class="material-icons">delete</i></a></td>
+				{% endif %}
+			</tr>
+			{% endfor %}			
+		</tbody>				
+	</table>
+	{% else %}			
+	<h4>You have no upcoming reservations.</h4>
+	{% endif %}
+	</div>
+	<br>
+	
+	{% if displayAllSections %}
+		<div id="AllResources">
+			<h3>All Resources</h3>
+			{% if allResources %}
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Availabile Start Time</th>
+						<th>Available End Time</th>
+						<th>Tags</th>
+						<th>Capacity</th>
+						<th>Number Of Times Reserved</th>
+					</tr>				
+				</thead>
+				<tbody>				
+					{% for resource in allResources %}
+					<tr>
+						<td>							
+							<a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a><sup><a href="/rssPage?value={{resource.id}}">RSS</a></sup>
+						</td>
+						<td>{{resource.availableStartTime}}</td>
+						<td> {{resource.availableEndTime}}</td>
+						<td>
+							{% for tag in resource.tags %}
+							<a href="/tagPage?value={{tag}}">{{tag}}</a>	
+							{% endfor %}
+						</td>
+						<td>
+							{{resource.capacity}}
+						</td>
+						<td>{{resource.numberOfTimesReserved}}</td>
+					</tr>
+					{% endfor %}			
+				</tbody>				
+			</table>
+			{% else %}			
+			<h4>There are no resources in the system currently.</h4>
+			{% endif %}
+		</div>
+		{% endif %}
+		<br>	
+		
+		<div id="YourResources">
+		{% if displayAllSections %}
+		<h3>Your Resources</h3>
+		{% else %}
+		<h3>Resources Of {{user}}</h3>
+		{% endif %}
+		{% if userResources %}
+			<table>
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Availabile Start Time</th>
+						<th>Available End Time</th>
+						<th>Tags</th>
+						<th>Capacity</th>
+						<th>Number Of Times Reserved</th>
+					</tr>				
+				</thead>
+				<tbody>				
+					{% for resource in userResources %}
+					<tr>
+						<td><a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a><sup><a href="/rssPage?value={{resource.id}}">RSS</a></sup></td>
+						<td>{{resource.availableStartTime}}</td>
+						<td> {{resource.availableEndTime}}</td>
+						<td>
+							{% for tag in resource.tags %}
+							<a href="/tagPage?value={{tag}}">{{tag}}</a>	
+							{% endfor %}
+						</td>
+						<td>
+							{{resource.capacity}}
+						</td>
+						<td>{{resource.numberOfTimesReserved}}</td>
+					</tr>
+					{% endfor %}			
+				</tbody>				
+			</table>
+			{% else %}
+			{% if displayAllSections %}
+			<h4>There are no resources owned by you.</h4>
+			{% else %}
+			<h4>There are no resources owned by {{user}}.</h4>
+			{% endif %}			
+			{% endif %}
+			</div><br><br>
+	</body>
+</html>
+{% endautoescape %}

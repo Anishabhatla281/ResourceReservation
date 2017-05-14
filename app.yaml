@@ -1,0 +1,20 @@
+application: resourcereservation-ost
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /stylesheets
+  static_dir: stylesheets
+  
+- url: /.*
+  script: resourcereservation.application
+  
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+- name: PIL
+  version: 1.1.7

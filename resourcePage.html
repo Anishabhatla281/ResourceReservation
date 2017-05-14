@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  		<title>Resource Reservation</title>
+  		<meta name="description" content="Resource Reservation System">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+		<style>
+		fieldset {
+		    border: 5px solid #00cccc;
+		    background: white;
+		    border-radius: 5px;
+		    padding: 15px;
+		}
+		p     { display: table-row;  }
+		label { display: table-cell; }
+		span { display: table-cell; }
+		
+		#success{
+			 animation: fadeOutAnimation 6s;
+			 animation-fill-mode: forwards;
+		}
+		
+		@keyframes fadeOutAnimation {
+		  0% {
+		    opacity: 1;
+		  }
+		  100% {
+		   opacity:0;
+		  }
+		}
+		</style>
+	</head>
+	<body>
+	<nav id= class="clearfix">
+		<ul class="clearfix">
+			<li style="width:{{width}}%"><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/viewReservations?value={{resource.id}}"><i class="material-icons">visibility</i> View Reservations</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/createReservation?value={{resource.id}}"><i class="material-icons">add</i> Add Reservation</a></li>
+			{% if enableEditingResource %}
+			<li style="width:{{width}}%"><a class="nounderline" href="/editResource?value={{resource.id}}"><i class="material-icons">edit</i> Edit This Resource</a></li>
+			{% endif %}
+			<li style="width:{{width}}%"><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>
+	
+	{% if message %}
+	<div id="success" class="isa_success">
+    	<i class="fa fa-check"></i>
+   	 	{{message}}
+	</div>
+	{% else %}
+	<br><br><br><br>
+	{% endif %}
+	
+	<form class="centerAlignForm">
+		<fieldset class="centerAlignFieldset" style="height:305px">
+		<legend align="center">&nbsp;Resource Details&nbsp;</legend>
+		<p>
+			<label>Resource Name:&nbsp;&nbsp;</label>
+			<span><a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a><sup><a href="/rssPage?value={{resource.id}}">RSS</a></sup></span>
+		</p>		
+		<p>
+			<label>Start Time:</label>
+			<span>{{resource.availableStartTime}}</span>
+		</p>
+		<p>
+			<label>End Time:</label>
+			<span>{{resource.availableEndTime}}</span>
+		</p>
+		<p>
+			<label>Tags:</label>
+			<span>
+			{% for tag in resource.tags %}
+				<a href="/tagPage?value={{tag}}">{{tag}}</a>	
+			{% endfor %}
+			</span>
+		</p>
+		<p>
+			<label>Capacity:</label>
+			<span>
+				 {{resource.capacity}}
+			</span>
+		</p>
+		<p>
+			<label>Number of times reserved:&nbsp;&nbsp;</label>
+			<span>{{resource.numberOfTimesReserved}}</span>
+		</p>		
+		<p>
+			<label>Image:</label>
+			<span>
+			{% if resource.avatar %}
+			<img src="/getImage?value={{resource.id}}">
+			{% endif %}
+			</span>
+		</p>
+		<p>
+			<label>Description:</label>
+			<span>
+			{% if resource.description %}
+			{{resource.description}}
+			{% endif %}
+			</span>
+		</p>
+		
+		</fieldset>
+	</form>
+		
+	</body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% autoescape true %}
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<title>Resource Reservation</title>
+		<meta name="description" content="Resource Reservation System">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">					
+	</head>
+<body>
+		<nav class="clearfix">
+		<ul class="clearfix">
+			<li><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			<li><a class="nounderline" href="/#YourReservations">Your Reservations</a></li>
+			<li><a class="nounderline" href="/#AllResources"><i class="material-icons">description</i> All Resources</a></li>
+			<li><a class="nounderline" href="/#YourResources">Your Resources</a></li>
+			<li><a class="nounderline" href="/createResource"><i class="material-icons">add</i> Add Resource</a></li>
+			<li><a class="nounderline" href="/#SearchResource"><i class="material-icons">search</i> Search</a></li>
+			<li><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>
+		
+	<br><br><br><br>
+	 <div class="displayDiv" style="margin-left:10%;">
+	 	&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+		<br>
+		&lt;rss version="2.0"&gt;
+		<br>
+		&lt;channel&gt;
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Reservations for {{resourceName}}&lt;/title&gt;
+		<br>
+		&nbsp;&nbsp;&nbsp;&nbsp;&lt;description&gt;Following are the upcoming reservations for {{resourceName}}&lt;/description&gt;
+		<br>
+		{% if reservations %}
+		 {% for reservation in reservations %}
+		 <br>
+			&nbsp;&nbsp;&nbsp;&nbsp; &lt;item&gt;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;Reservation Details&lt;/title&gt;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;description&gt;Reservation of the resource '{{reservation.resourceName}}' starts at {{reservation.startTime}} hours for a duration of {{reservation.duration}} for the date: {{reservation.date}} by {{reservation.ownerEmail}}&lt;/description&gt;
+			<br>
+			&nbsp;&nbsp;&nbsp;&nbsp; &lt;/item&gt;
+			<br>
+		  {% endfor %}
+		  {% endif %}
+		 &lt;/channel&gt;
+		 <br>
+		&lt;/rss&gt;
+		</div>	
+		<br><br>
+</body>
+</html>
+{% endautoescape %}

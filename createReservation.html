@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+  		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  		<title>Resource Reservation</title>
+  		<meta name="description" content="Resource Reservation System">
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet"> 
+  		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link rel="stylesheet" type="text/css" href="/stylesheets/landingPage.css">
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+		<script>
+		function validateForm() {  
+		    
+		    var startTime = document.getElementById("startTime").value;
+		    startTimeArray = startTime.split(":");
+		    
+			if(startTimeArray[0] < 10){
+		   		startTimeArray[0] = startTimeArray[0]%10;
+		   	}
+		   	if(startTimeArray[1] < 10){
+		   		startTimeArray[1] = startTimeArray[1]%10;
+		   	}
+		   
+		   	var duration = document.getElementById("duration").value;
+		   	durationArray = duration.split(":");
+		 
+		   	if(durationArray[0] < 10){
+		   		durationArray[0] = durationArray[0]%10;
+		   	}
+			if(durationArray[1] < 10){
+		   		durationArray[1] = durationArray[1]%10;
+		   	}
+			
+			var endTimeInMinutes = parseInt(startTimeArray[0])*60 + parseInt(startTimeArray[1]) + parseInt(durationArray[0]*60) + parseInt(durationArray[1]);
+			
+			var availableStartTime = document.getElementById("availableStartTime").value;
+			availableStartTimeArray = availableStartTime.split(":");
+			
+			var availableEndTime = document.getElementById("availableEndTime").value;
+			availableEndTimeArray = availableEndTime.split(":");
+			
+			var availableEndTimeInMinutes = parseInt(availableEndTimeArray[0])*60 + parseInt(availableEndTimeArray[1]);
+			
+			message = " Valid Start and End Time for this resource is between: " + availableStartTime + " and " + availableEndTime;
+			
+			if(startTimeArray[0] < availableStartTimeArray[0]){
+		 		alert("Please enter a valid start time!" + message);
+		        return false;
+		 	}
+		 
+			else if(startTimeArray[0] == availableStartTimeArray[0] && startTimeArray[1] < availableStartTimeArray[1]){
+				alert("Please enter a valid start time." + message);
+		        return false;
+		 	}
+		   
+			if(endTimeInMinutes > availableEndTimeInMinutes){
+		 		alert("Please enter a valid start time and duration." + message);
+		        return false;
+		 	}
+		 	
+		 	return true;   
+		}
+		</script>
+		<style>
+		p     { display: table-row;  }
+		label { display: table-cell; }
+		span { display: table-cell; }
+		</style>
+</head>
+<body>
+<nav class="clearfix">
+		<ul class="clearfix">
+			<li style="width:{{width}}%"><a class="nounderline" href="/"><i class="material-icons">home</i> Home</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#YourReservations">Your Reservations</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#AllResources"><i class="material-icons">description</i> All Resources</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#YourResources">Your Resources</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/createResource"><i class="material-icons">add</i> Add Resource</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="/#SearchResource"><i class="material-icons">search</i> Search</a></li>
+			<li style="width:{{width}}%"><a class="nounderline" href="{{url|safe}}"><i class="material-icons">person</i> Log Out</a></li>	
+		</ul>
+	</nav>		
+	<br>
+
+{% if message %}
+	<div class="isa_error">
+   		<i class="fa fa-times-circle"></i>
+ 		{{message}}
+	</div> 
+{% endif %}
+
+<br>
+
+<div class="displayDiv" style="margin-left:10%;">
+	
+<h3>Add Reservation For <a href="/resourcePage?value={{resource.id}}">{{resource.resourceName}}</a></h3><br>
+
+<form class="centerAlignForm" action="/createReservation" onsubmit="return validateForm()" method="post">
+		<p>
+			<label>Date*:</label> 
+			<span><input type="date" id="reservationDate" required name="reservationDate"></span>
+		<br><br></p>
+		<p>
+			<label>Start Time*:&nbsp;&nbsp;</label> 
+			<span><input type="text" id="startTime" name="startTime" required placeholder="Valid Start time: {{resource.availableStartTime}}" pattern="([01]{1}[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}"
+	title="24-hour format"></span>
+	<br><br></p>
+	<p>
+		<label>Duration*:</label> 
+		<span><input type="text" id="duration" name="duration" required placeholder="00:15" pattern="([0]{1}[0]{1}:[0]{1}[1-9]{1})|([0]{1}[0]{1}:[1-5]{1}[0-9]{1})|([0]{1}[1-9]{1}:[0-5]{1}[0-9]{1})|(([1]{1}[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1})"
+	title="hours:minutes"></span>
+	<br><br></p>
+	<p>	
+		<label><input type="hidden" name="resourceID" value="{{resource.id}}"></label>
+	<span><input type="hidden" id="availableStartTime" value="{{resource.availableStartTime}}"></span>
+	</p>
+	<input type="hidden" id="availableEndTime" value="{{resource.availableEndTime}}">	
+<input style="margin-left:25%" type="submit" value="Submit"><br><br>
+</form>
+</body>
+</html>

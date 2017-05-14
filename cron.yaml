@@ -1,0 +1,4 @@
+cron:
+- description: sendReservationStartedEmail
+  url: /sendMailViaCron
+  schedule: every 1 minutes
