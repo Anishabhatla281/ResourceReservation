@@ -14,6 +14,19 @@
 		p     { display: table-row;  }
 		label { display: table-cell; }
 		span { display: table-cell; }
+		#error{
+			 animation: fadeOutAnimation 10s;
+			 animation-fill-mode: forwards;
+		}
+		
+		@keyframes fadeOutAnimation {
+		  0% {
+		    opacity: 1;
+		  }
+		  100% {
+		   opacity:0;
+		  }
+		}
 		</style>
 </head>
 <body>
@@ -31,7 +44,7 @@
 	<br>
 
 {% if message %}
-	<div class="isa_error">
+	<div id="error" class="isa_error">
    		<i class="fa fa-times-circle"></i>
  		{{message}}
 	</div> 
@@ -49,7 +62,7 @@
 		<br><br></p>
 		<p>
 			<label>Start Time*:&nbsp;&nbsp;</label> 
-			<span><input type="text" id="startTime" name="startTime" required placeholder="Enter a start time" pattern="([01]{1}[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}"
+			<span><input type="text" id="startTime" name="startTime" required placeholder="04:00" pattern="([01]{1}[0-9]{1}|2[0-3]{1}):[0-5]{1}[0-9]{1}"
 	title="24-hour format"></span>
 	<br><br></p>
 	<p>
