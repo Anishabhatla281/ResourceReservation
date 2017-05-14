@@ -78,13 +78,6 @@ def formatToDateTime(stringDate, stringTime):
     requestedDateTime = stringDate + " " + stringTime
     return datetime.strptime(requestedDateTime, '%Y-%m-%d %H:%M')
 
-def sendReservationBookedEmail(reservation):
-    """ Initiates action to send resource confirmation email upon booking """  
-    mail.send_mail(sender="anishabhatla281@gmail.com", to=reservation.ownerEmail, subject="Reservation Confirmation Notification", 
-                   body="""This is to notify you that your booking of resource: """ + reservation.resourceName + """ for date: """ 
-                   + str(reservation.date) + """ from """ + reservation.startTime + """ hours for duration: """ + 
-                   reservation.duration + """ is confirmed.""")
-
 def sendReservationStartedEmail(reservation):
     """ Initiates action to send resource reminder email upon start of a reservation """
     mail.send_mail(sender="anishabhatla281@gmail.com", to=reservation.ownerEmail, subject="Reservation Started Notification", 
@@ -479,10 +472,7 @@ class CreateReservation(webapp2.RequestHandler):
                         resource.lastReservationTime = datetime.now()
                         resource.numberOfTimesReserved += 1
                         resource.put()
-                        try:
-                            sendReservationBookedEmail(reservation)
-                        except:
-                            logging.exception('')
+                        
                         message="The reservation has been made."
                         template_values = {
                             'resource': resource,
