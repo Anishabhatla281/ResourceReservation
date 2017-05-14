@@ -64,6 +64,19 @@
 		}
 		</script>
 		<style>
+		 #error{
+			 animation: fadeOutAnimation 10s;
+			 animation-fill-mode: forwards;
+		}
+		
+		@keyframes fadeOutAnimation {
+		  0% {
+		    opacity: 1;
+		  }
+		  100% {
+		   opacity:0;
+		  }
+		}
 		p     { display: table-row;  }
 		label { display: table-cell; }
 		span { display: table-cell; }
@@ -84,7 +97,7 @@
 	<br>
 
 {% if message %}
-	<div class="isa_error">
+	<div id="error" class="isa_error">
    		<i class="fa fa-times-circle"></i>
  		{{message}}
 	</div> 
